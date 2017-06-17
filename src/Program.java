@@ -4,13 +4,16 @@ import java.util.*;
  * Created by Kristian Andre Aspevik on 17/06/2017.
  */
 class Program {
+    static Scanner scan;
 
     public static void main(String[] args) {
-        Scanner scan = new Scanner(System.in);
+        scan = new Scanner(System.in);
         System.out.println("Please input Coordinates (in the format x,y)");
-        String input = scan.next();
+        String inputRegex = "^-?[0-9],-?[0-9]$";
+        String input = captureInput(inputRegex);
         System.out.println("Please input a seed number (maximum 2^32-1)");
-        int seedNumber = scan.nextInt();
+        inputRegex = "^[0-9]*[1-9][0-9]*$";
+        int seedNumber = Integer.parseInt(captureInput(inputRegex));
 
         EventProximityHandler eventProximityHandler = new EventProximityHandler(input, seedNumber);
         final long startTime = System.currentTimeMillis();
@@ -23,6 +26,18 @@ class Program {
         System.out.println("Total execution time: " + (endTime - startTime) + "ms");
     }
 
+    public static String captureInput(String regex){
+        String input = scan.next();
+        String result;
+        if(input.matches(regex)){
+            result = input;
+        }
+        else{
+            System.out.println("This input is not valid. Please try again");
+            result = captureInput(regex);
+        }
+        return result;
+    }
 
 
 
