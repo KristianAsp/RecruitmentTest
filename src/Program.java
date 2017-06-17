@@ -15,7 +15,7 @@ class Program {
         Scanner scan = new Scanner(System.in);
         System.out.println("Please input Coordinates (in the format x,y)");
         String input = scan.next();
-        Location location = new Location(1,1);
+        Location location = new Location(input);
         System.out.println("Please input a seed number (maximum 2^32-1)");
         int seedNumber = scan.nextInt();
         final long startTime = System.currentTimeMillis();
@@ -27,9 +27,9 @@ class Program {
             xCoordinate = rnd1.nextInt(maxRange + 1 - minRange) + minRange; //Generate a random value for x between minRange and maxRange
             yCoordinate = rnd1.nextInt(maxRange + 1 - minRange) + minRange; //Generate a random value for y between minRange and maxRange
             int priceInDollars = rnd1.nextInt(40);
-            events[i] = new int[]{i+1, xCoordinate, yCoordinate, priceInDollars, 0};
+            events[i] = new int[]{i+1, xCoordinate, yCoordinate, priceInDollars, 0}; //Add the new event along with the details e.g. position and price.
 
-            int distance = calculateManhattanDistance(events[i], location);
+            int distance = calculateManhattanDistance(events[i], location); //Set the correct distance between the location of the input and the current event.
             events[i][4] = distance;
         }
 
@@ -37,13 +37,16 @@ class Program {
         printOutResults(result, location);
 
         final long endTime = System.currentTimeMillis();
-        //System.out.println("Total execution time: " + (endTime - startTime) + "ms");
+        System.out.println("Total execution time: " + (endTime - startTime) + "ms");
     }
 
     private static void printOutResults(int[][] result, Location location) {
         System.out.println("Closest Events to {" + location.getX() + "," + location.getY() + "}");
         for(int[] subArray : result){
-            System.out.println("Event " + subArray[0] + " - Price: " + subArray[3] + " - Distance: " + subArray[4]);
+            String eventIDFormatted = String.format("%03d", subArray[0]); //Add some leading zeros to make it look pretty
+            int price = subArray[3];
+            int distance = subArray[4];
+            System.out.println("Event " + eventIDFormatted + " - Price: $" + price + " - Distance: " + distance);
         }
     }
 
@@ -51,7 +54,6 @@ class Program {
         if(events.length < 6){
             return events;
         }
-
 
         events = sortArray(events);
         int[][] result = new int[5][5];
@@ -88,9 +90,11 @@ class Location{
     private int x;
     private int y;
 
-    public Location(int x, int y){
-        this.x = x;
-        this.y = y;
+    public Location(String input){
+        String[] coordinates = input.split(",");
+
+        this.x = Integer.parseInt(coordinates[0]);
+        this.y = Integer.parseInt(coordinates[1]);
     }
 
     public int getX(){
@@ -101,4 +105,6 @@ class Location{
         return y;
     }
 }
+
+
 
