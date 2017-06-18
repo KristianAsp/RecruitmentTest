@@ -4,25 +4,24 @@ import java.util.*;
  * Created by Kristian on 17/06/2017.
  */
 public class EventProximityHandler {
-    int maxRange = 10;
-    int minRange = -10;
-    int xCoordinate;
-    int yCoordinate;
-    int minPrice = 10;
-    int maxPrice = 40;
-    int numberOfEventsSeed = 100;
-    Random seedDataGenerator;
-    Location location;
-    ArrayList<String> eventLocationLookupTable = new ArrayList<>();
+    private int maxRange = 10;
+    private int minRange = -10;
+    private int xCoordinate;
+    private int yCoordinate;
+    private int minPrice = 10;
+    private int maxPrice = 40;
+    private int numberOfEventsBoundary = 100;
+    private Random seedDataGenerator;
+    private Location location;
+    private ArrayList<String> eventLocationLookupTable = new ArrayList<>();
 
-    ArrayList<String> e = new ArrayList<>();
     public EventProximityHandler(String input, int seed){
         seedDataGenerator = new Random(seed);
         location = new Location(input);
     }
 
     public int[][] generateEvents(){
-        int numberOfEventsToCreate = seedDataGenerator.nextInt(numberOfEventsSeed) + 1; //Create a random number of events between 1 and 30;
+        int numberOfEventsToCreate = seedDataGenerator.nextInt(numberOfEventsBoundary) + 1; //Create a random number of events between 1 and numberOfEventsBoundary;
         int[][] events = new int[numberOfEventsToCreate][5];
 
         for(int i = 0; i < numberOfEventsToCreate; i++){
@@ -68,20 +67,13 @@ public class EventProximityHandler {
         events = sortArray(events);
         int[][] result = new int[5][5];
 
-        for(int i = 0; i < 5; i++){
-            result[i] = events[i];
-        }
+        System.arraycopy(events, 0, result, 0, 5); //Copy the 5 first elements of the now sorted array to the result array.
 
         return result;
     }
 
     private int[][] sortArray(int[][] events) {
-        Arrays.sort(events, new Comparator<int[]>(){
-            @Override
-            public int compare(int[] o1, int[] o2) {
-                return(Integer.valueOf(o1[4]).compareTo(o2[4]));
-            }
-        });
+        Arrays.sort(events, (o1, o2) -> (Integer.valueOf(o1[4]).compareTo(o2[4])));
         return events;
     }
 
@@ -94,24 +86,26 @@ public class EventProximityHandler {
             System.out.println("Event " + eventIDFormatted + " - Price: $" + price + " - Distance: " + distance);
         }
     }
+
+    class Location{
+        private int x;
+        private int y;
+
+        private Location(String input){
+            String[] coordinates = input.split(",");
+
+            this.x = Integer.parseInt(coordinates[0]);
+            this.y = Integer.parseInt(coordinates[1]);
+        }
+
+        int getX(){
+            return x;
+        }
+
+        int getY(){
+            return y;
+        }
+    }
 }
 
-class Location{
-    private int x;
-    private int y;
 
-    public Location(String input){
-        String[] coordinates = input.split(",");
-
-        this.x = Integer.parseInt(coordinates[0]);
-        this.y = Integer.parseInt(coordinates[1]);
-    }
-
-    public int getX(){
-        return x;
-    }
-
-    public int getY(){
-        return y;
-    }
-}

@@ -4,15 +4,15 @@ import java.util.*;
  * Created by Kristian Andre Aspevik on 17/06/2017.
  */
 class Program {
-    static Scanner scan;
+    static Scanner scan = new Scanner(System.in);
 
     public static void main(String[] args) {
-        scan = new Scanner(System.in);
         System.out.println("Please input Coordinates (in the format x,y)");
-        String inputRegex = "^-?[0-9],-?[0-9]$";
+        String inputRegex = "^-?(10|[0-9]),-?(10|[0-9])$"; //Use regex to match the input with the expected format.
         String input = captureInput(inputRegex);
-        System.out.println("Please input a seed number (maximum 2^32-1)");
-        inputRegex = "^[0-9]*[1-9][0-9]*$";
+
+        System.out.println("Please input a seed number (maximum 2^32-1 and minimum -2^32+1)");
+        inputRegex = "^-?[0-9]*[1-9][0-9]*$";
         int seedNumber = Integer.parseInt(captureInput(inputRegex));
 
         EventProximityHandler eventProximityHandler = new EventProximityHandler(input, seedNumber);
